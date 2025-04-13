@@ -21,7 +21,7 @@ static const char col_cyan[] = "#8ba4b0";
 static const char* colors[][3] = {
     /*               fg         bg         border   */
     [SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-    [SchemeSel] = { col_gray1,  col_cyan,  col_cyan },
+    [SchemeSel] = { col_gray1,  col_cyan,  col_gray4 },
 };
 
 /* tagging */
@@ -86,6 +86,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0";
 static const char* dmenucmd[] = { "rofi", "-show", "drun" };
 static const char* termcmd[] = { "kitty", NULL };
+static const char* filescmd[] = { "pcmanfm", NULL };
 static const char* lockcmd[] = { "bash", "-c",
     "XSECURELOCK_DISCARD_FIRST_KEYPRESS=0 XSECURELOCK_COMPOSITE_OBSCURER=0 "
     "xsecurelock" };
@@ -93,6 +94,7 @@ static const char* lockcmd[] = { "bash", "-c",
 static const Key keys[] = {
     /* modifier                     key        function        argument */
     {             MODKEY,      XK_d,      spawn,    { .v = dmenucmd } },
+    {             MODKEY,      XK_e,      spawn,    { .v = filescmd } },
     {             MODKEY, XK_Return,      spawn,     { .v = termcmd } },
     {             MODKEY,      XK_b,  togglebar,                { 0 } },
     {             MODKEY,      XK_j, focusstack,          { .i = +1 } },
@@ -142,7 +144,7 @@ static const Button buttons[] = {
 
 // autostarttags
 static const char* browsercmd[] = { "firefox", NULL };
-static const char* telegram[] = { "telegram-desktop", NULL };
+static const char* telegram[] = { "bash", "-c","QT_QPA_PLATFORMTHEME=gtk3 telegram-desktop", NULL };
 
 /* last cmd must be NULL! */
 Autostarttag autostarttaglist[] = {
