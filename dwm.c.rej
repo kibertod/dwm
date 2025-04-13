@@ -1,11 +1,10 @@
 --- dwm.c
 +++ dwm.c
-@@ -2137,7 +2152,7 @@ updategeom(void)
- 					m->clients = c->next;
- 					detachstack(c);
- 					c->mon = mons;
--					attach(c);
-+					attachabove(c);
- 					attachstack(c);
- 				}
- 				if (m == selmon)
+@@ -131,6 +132,7 @@ struct Monitor {
+ 	Monitor *next;
+ 	Window barwin;
+ 	const Layout *lt[2];
++	Pertag *pertag;
+ };
+ 
+ typedef struct {
