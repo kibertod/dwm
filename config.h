@@ -21,7 +21,7 @@ static const char col_cyan[] = "#8ba4b0";
 static const char* colors[][3] = {
     /*               fg         bg         border   */
     [SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-    [SchemeSel] = { col_gray1,  col_cyan,  col_gray4 },
+    [SchemeSel] = { col_gray1,  col_cyan, col_gray4 },
 };
 
 /* tagging */
@@ -59,12 +59,14 @@ static const int lockfullscreen =
     1; /* 1 will force focus on the fullscreen window */
 
 #include "fibonacci.c"
+#include "layouts.c"
 static const Layout layouts[] = {
     /* symbol     arrange function */
     {  "[]=",    tile }, /* first entry is default */
     {  "><>",    NULL },
     {  "[M]", monocle },
     { "[\\]", dwindle },
+    {   "HH",    grid },
 };
 
 /* key definitions */
@@ -110,6 +112,7 @@ static const Key keys[] = {
     {             MODKEY,      XK_f,  setlayout, { .v = &layouts[1] } },
     {             MODKEY,      XK_m,  setlayout, { .v = &layouts[2] } },
     {             MODKEY,      XK_s,  setlayout, { .v = &layouts[3] } },
+    {             MODKEY,      XK_g,  setlayout, { .v = &layouts[4] } },
     {             MODKEY,      XK_l,      spawn,     { .v = lockcmd } },
     { MODKEY | ShiftMask,      XK_l,  setlayout,                { 0 } },
     {             MODKEY,      XK_0,       view,         { .ui = ~0 } },
@@ -144,7 +147,8 @@ static const Button buttons[] = {
 
 // autostarttags
 static const char* browsercmd[] = { "firefox", NULL };
-static const char* telegram[] = { "bash", "-c","QT_QPA_PLATFORMTHEME=gtk3 telegram-desktop", NULL };
+static const char* telegram[] = { "bash", "-c",
+    "QT_QPA_PLATFORMTHEME=gtk3 telegram-desktop", NULL };
 
 /* last cmd must be NULL! */
 Autostarttag autostarttaglist[] = {
