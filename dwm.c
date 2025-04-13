@@ -1856,13 +1856,21 @@ showhide(Client *c)
 	if (ISVISIBLE(c)) {
 		/* show clients top down */
 		XMoveWindow(dpy, c->win, c->x, c->y);
+        XResizeWindow(dpy, c->win, WIDTH(c), HEIGHT(c));
 		if ((!c->mon->lt[c->mon->sellt]->arrange || c->isfloating) && !c->isfullscreen)
 			resize(c, c->x, c->y, c->w, c->h, 0);
 		showhide(c->snext);
 	} else {
 		/* hide clients bottom up */
+        unsigned int client_tag = ffs(c->tags) - 1;
+        unsigned int selected_tag = ffs(selmon->tagset[selmon->seltags]) - 1;
+        XResizeWindow(dpy, c->win, 1, HEIGHT(c));
+        if (client_tag < selected_tag) {
+            XMoveWindow(dpy, c->win, WIDTH(c) * -2, c->y);
+        } else {
+            XMoveWindow(dpy, c->win, 1920, c->y);
+        }
 		showhide(c->snext);
-		XMoveWindow(dpy, c->win, WIDTH(c) * -2, c->y);
 	}
 }
 
