@@ -1,10 +1,29 @@
 --- dwm.c
 +++ dwm.c
-@@ -131,6 +132,7 @@ struct Monitor {
- 	Monitor *next;
- 	Window barwin;
- 	const Layout *lt[2];
-+	Pertag *pertag;
- };
+@@ -285,6 +301,8 @@ static Drw *drw;
+ static Monitor *mons, *selmon;
+ static Window root, wmcheckwin;
  
- typedef struct {
++static xcb_connection_t *xcon;
++
+ /* configuration, allows nested code to access above variables */
+ #include "config.h"
+ 
+@@ -721,6 +788,9 @@ destroynotify(XEvent *e)
+ 
+ 	if ((c = wintoclient(ev->window)))
+ 		unmanage(c, 1);
++
++	else if ((c = swallowingclient(ev->window)))
++		unmanage(c->swallowing, 1);
+ }
+ 
+ void
+@@ -1108,6 +1179,7 @@ manage(Window w, XWindowAttributes *wa)
+ 	} else {
+ 		c->mon = selmon;
+ 		applyrules(c);
++		term = termforwin(c);
+ 	}
+ 
+ 	if (c->x + WIDTH(c) > c->mon->wx + c->mon->ww)
