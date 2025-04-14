@@ -148,6 +148,7 @@ struct Monitor {
 	Monitor *next;
 	Window barwin;
     Window agswin;
+    int agsshown;
 	const Layout *lt[2];
 	const Layout *lastlt;
 	Pertag *pertag;
@@ -245,6 +246,7 @@ static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
 static void togglebar(const Arg *arg);
+static void toggleags(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
@@ -1192,10 +1194,8 @@ manage(Window w, XWindowAttributes *wa)
 	updatewindowtype(c);
 	updatesizehints(c);
 	updatewmhints(c);
-    if (strcmp(c->name, "com.github.Aylur.ags") != 0) {
-        c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
-        c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
-    }
+    c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
+    c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
 	grabbuttons(c, 0);
 	if (!c->isfloating)
@@ -1242,14 +1242,9 @@ manageagsbar(Window win, XWindowAttributes *wa)
 		return;
 
 	m->agswin = win;
-	m->by = wa->y;
-	bh = m->bh = wa->height;
 	arrange(m);
-	XSelectInput(dpy, win, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
-	XMoveResizeWindow(dpy, win, wa->x, wa->y, wa->width, wa->height);
+	XMoveResizeWindow(dpy, win, 0, 20, wa->width, 1060);
 	XMapWindow(dpy, win);
-	XChangeProperty(dpy, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
-		(unsigned char *) &win, 1);
 }
 
 void
@@ -1310,6 +1305,36 @@ motionnotify(XEvent *e)
 	mon = m;
 }
 
+void toggleags(const Arg *arg)
+{
+    struct sigaction sa;
+	Monitor *m = recttomon(0, 0, 1, 1);
+    if (!m->agswin) {
+        m->agsshown = 1;
+        pid_t pid = fork();
+        if (pid == 0) {
+            if (dpy)
+                close(ConnectionNumber(dpy));
+            setsid();
+
+            sigemptyset(&sa.sa_mask);
+            sa.sa_flags = 0;
+            sa.sa_handler = SIG_DFL;
+            sigaction(SIGCHLD, &sa, NULL);
+            char* argument_list[] = {"agsv1", "-t", "sidebar", NULL};
+            execvp("agsv1", argument_list);
+        }
+    } else {
+        if (m->agsshown) {
+            XMoveWindow(dpy, m->agswin, -1920, 20);
+            m->agsshown = 0;
+        } else {
+            XMoveWindow(dpy, m->agswin, 0, 20);
+            m->agsshown = 1;
+        }
+    }
+}
+
 void
 movemouse(const Arg *arg)
 {
@@ -1323,8 +1348,6 @@ movemouse(const Arg *arg)
 		return;
 	if (c->isfullscreen) /* no support moving fullscreen windows by mouse */
 		return;
-    if (strcmp(c->name, "com.github.Aylur.ags") == 0)
-        return;
     restack(selmon);
 	ocx = c->x;
 	ocy = c->y;
@@ -1448,8 +1471,6 @@ recttomon(int x, int y, int w, int h)
 void
 resize(Client *c, int x, int y, int w, int h, int interact)
 {
-    if (strcmp(c->name, "com.github.Aylur.ags") == 0)
-        return;
     if (applysizehints(c, &x, &y, &w, &h, interact))
 		resizeclient(c, x, y, w, h);
 }
@@ -1506,8 +1527,6 @@ resizemouse(const Arg *arg)
 		return;
 	if (c->isfullscreen) /* no support resizing fullscreen windows by mouse */
 		return;
-    if (strcmp(c->name, "com.github.Aylur.ags") == 0)
-        return;
     restack(selmon);
 	ocx = c->x;
 	ocy = c->y;
@@ -1568,8 +1587,6 @@ restack(Monitor *m)
 		wc.stack_mode = Below;
 		wc.sibling = m->barwin;
 		for (c = m->stack; c; c = c->snext) {
-            if (strcmp(c->name, "com.github.Aylur.ags") == 0)
-                continue;
 			if (!c->isfloating && ISVISIBLE(c)) {
 				XConfigureWindow(dpy, c->win, CWSibling|CWStackMode, &wc);
 				wc.sibling = c->win;
@@ -1910,10 +1927,6 @@ showhide(Client *c)
 {
 	if (!c)
 		return;
-    if (strcmp(c->name, "com.github.Aylur.ags") == 0) {
-        showhide(c->snext);
-        return;
-    }
     if (ISVISIBLE(c)) {
 		/* show clients top down */
 		XMoveWindow(dpy, c->win, c->x, c->y);
