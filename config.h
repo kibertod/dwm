@@ -9,8 +9,6 @@ static const int usealtbar = 1; /* 1 means use non-dwm status bar */
 static const char* altbarclass = "Polybar"; /* Alternate bar class name */
 static const char* altbarcmd =
     "bash -c \"/usr/bin/polybar -r bar &\""; /* Alternate bar launch command */
-static const int swallowfloating =
-    0; /* 1 means swallow floating windows by default */
 static const int showbar = 1; /* 0 means no bar */
 static const int topbar = 1; /* 0 means bottom bar */
 static const char* fonts[] = { "CommitMono Nerd Font Mono:size=10" };
@@ -34,24 +32,22 @@ static const Rule rules[] = {
      *	WM_CLASS(STRING) = instance, class
      *	WM_NAME(STRING) = title
      */
-    /* {class, instance, title, tagsmask, isfloating, isterminal, noswallow,
-       monitor} */
-    {                                   "Firefox", NULL, NULL, 1 << 8, 0, 0, 0 - 1 },
-    {                              "Blueberry.py", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                                  "Nitrogen", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                              "Gnome-tweaks", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                      "Nm-connection-editor", NULL, NULL,      0, 1, 0, 0 - 1 },
-    { "ru-turikhay-tlauncher-bootstrap-Bootstrap", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                                 "Minecraft", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                               "File-roller", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                  "selectdefaultapplication", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                              "Image Lounge", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                               "pavucontrol", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                               "pwvucontrol", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                          "gnome-calculator", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                        "org.gnome.Nautilus", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                           "amplitube 5.exe", NULL, NULL,      0, 1, 0, 0 - 1 },
-    {                                     "kitty", NULL, NULL,      0, 1, 1, 0 - 1 },
+    /* class      instance    title       tags mask     isfloating   monitor */
+    {                                   "Firefox", NULL, NULL, 1 << 8, 0, -1 },
+    {                              "Blueberry.py", NULL, NULL,      0, 1, -1 },
+    {                                  "Nitrogen", NULL, NULL,      0, 1, -1 },
+    {                              "Gnome-tweaks", NULL, NULL,      0, 1, -1 },
+    {                      "Nm-connection-editor", NULL, NULL,      0, 1, -1 },
+    { "ru-turikhay-tlauncher-bootstrap-Bootstrap", NULL, NULL,      0, 1, -1 },
+    {                                 "Minecraft", NULL, NULL,      0, 1, -1 },
+    {                               "File-roller", NULL, NULL,      0, 1, -1 },
+    {                  "selectdefaultapplication", NULL, NULL,      0, 1, -1 },
+    {                              "Image Lounge", NULL, NULL,      0, 1, -1 },
+    {                               "pavucontrol", NULL, NULL,      0, 1, -1 },
+    {                               "pwvucontrol", NULL, NULL,      0, 1, -1 },
+    {                          "gnome-calculator", NULL, NULL,      0, 1, -1 },
+    {                        "org.gnome.Nautilus", NULL, NULL,      0, 1, -1 },
+    {                           "amplitube 5.exe", NULL, NULL,      0, 1, -1 },
 };
 
 /* layout(s) */
