@@ -48,6 +48,7 @@ static const Rule rules[] = {
     {                          "gnome-calculator", NULL, NULL,      0, 1, -1 },
     {                        "org.gnome.Nautilus", NULL, NULL,      0, 1, -1 },
     {                           "amplitube 5.exe", NULL, NULL,      0, 1, -1 },
+    {                      "Com.github.Aylur.ags", NULL, NULL,      0, 1, -1 },
 };
 
 /* layout(s) */

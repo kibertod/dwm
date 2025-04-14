@@ -147,6 +147,7 @@ struct Monitor {
 	Client *stack;
 	Monitor *next;
 	Window barwin;
+    Window agswin;
 	const Layout *lt[2];
 	const Layout *lastlt;
 	Pertag *pertag;
@@ -1191,8 +1192,10 @@ manage(Window w, XWindowAttributes *wa)
 	updatewindowtype(c);
 	updatesizehints(c);
 	updatewmhints(c);
-	c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
-	c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
+    if (strcmp(c->name, "com.github.Aylur.ags") != 0) {
+        c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
+        c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
+    }
 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
 	grabbuttons(c, 0);
 	if (!c->isfloating)
@@ -1231,6 +1234,23 @@ managealtbar(Window win, XWindowAttributes *wa)
 	XChangeProperty(dpy, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
 		(unsigned char *) &win, 1);
 }
+void
+manageagsbar(Window win, XWindowAttributes *wa)
+{
+	Monitor *m;
+	if (!(m = recttomon(wa->x, wa->y, wa->width, wa->height)))
+		return;
+
+	m->agswin = win;
+	m->by = wa->y;
+	bh = m->bh = wa->height;
+	arrange(m);
+	XSelectInput(dpy, win, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
+	XMoveResizeWindow(dpy, win, wa->x, wa->y, wa->width, wa->height);
+	XMapWindow(dpy, win);
+	XChangeProperty(dpy, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
+		(unsigned char *) &win, 1);
+}
 
 void
 mappingnotify(XEvent *e)
@@ -1250,10 +1270,12 @@ maprequest(XEvent *e)
 
 	if (!XGetWindowAttributes(dpy, ev->window, &wa) || wa.override_redirect)
 		return;
-	if (wmclasscontains(ev->window, altbarclass, ""))
-		managealtbar(ev->window, &wa);
-	else if (!wintoclient(ev->window))
-		manage(ev->window, &wa);
+    if (wmclasscontains(ev->window, altbarclass, ""))
+        managealtbar(ev->window, &wa);
+    else if (wmclasscontains(ev->window, "Com.github.Aylur.ags", ""))
+        manageagsbar(ev->window, &wa);
+    else if (!wintoclient(ev->window))
+        manage(ev->window, &wa);
 }
 
 void
@@ -1301,7 +1323,9 @@ movemouse(const Arg *arg)
 		return;
 	if (c->isfullscreen) /* no support moving fullscreen windows by mouse */
 		return;
-	restack(selmon);
+    if (strcmp(c->name, "com.github.Aylur.ags") == 0)
+        return;
+    restack(selmon);
 	ocx = c->x;
 	ocy = c->y;
 	if (XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
@@ -1424,7 +1448,9 @@ recttomon(int x, int y, int w, int h)
 void
 resize(Client *c, int x, int y, int w, int h, int interact)
 {
-	if (applysizehints(c, &x, &y, &w, &h, interact))
+    if (strcmp(c->name, "com.github.Aylur.ags") == 0)
+        return;
+    if (applysizehints(c, &x, &y, &w, &h, interact))
 		resizeclient(c, x, y, w, h);
 }
 
@@ -1480,7 +1506,9 @@ resizemouse(const Arg *arg)
 		return;
 	if (c->isfullscreen) /* no support resizing fullscreen windows by mouse */
 		return;
-	restack(selmon);
+    if (strcmp(c->name, "com.github.Aylur.ags") == 0)
+        return;
+    restack(selmon);
 	ocx = c->x;
 	ocy = c->y;
 	if (XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
@@ -1539,11 +1567,14 @@ restack(Monitor *m)
 	if (m->lt[m->sellt]->arrange) {
 		wc.stack_mode = Below;
 		wc.sibling = m->barwin;
-		for (c = m->stack; c; c = c->snext)
+		for (c = m->stack; c; c = c->snext) {
+            if (strcmp(c->name, "com.github.Aylur.ags") == 0)
+                continue;
 			if (!c->isfloating && ISVISIBLE(c)) {
 				XConfigureWindow(dpy, c->win, CWSibling|CWStackMode, &wc);
 				wc.sibling = c->win;
 			}
+		}
 	}
 	XSync(dpy, False);
 	while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
@@ -1879,7 +1910,11 @@ showhide(Client *c)
 {
 	if (!c)
 		return;
-	if (ISVISIBLE(c)) {
+    if (strcmp(c->name, "com.github.Aylur.ags") == 0) {
+        showhide(c->snext);
+        return;
+    }
+    if (ISVISIBLE(c)) {
 		/* show clients top down */
 		XMoveWindow(dpy, c->win, c->x, c->y);
 		if ((!c->mon->lt[c->mon->sellt]->arrange || c->isfloating) && !c->isfullscreen)
