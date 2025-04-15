@@ -1,4 +1,4 @@
-
+#include <X11/XF86keysym.h>
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
@@ -93,37 +93,41 @@ static const char* filescmd[] = { "pcmanfm", NULL };
 static const char* lockcmd[] = { "bash", "-c",
     "XSECURELOCK_DISCARD_FIRST_KEYPRESS=0 XSECURELOCK_COMPOSITE_OBSCURER=0 "
     "xsecurelock" };
+static const char* volumeup[] = { "/home/kibertod/.dwm/volumeUp.sh", NULL };
+static const char* volumedown[] = { "/home/kibertod/.dwm/volumeDown.sh", NULL };
 
 static const Key keys[] = {
     /* modifier                     key        function        argument */
-    {             MODKEY,      XK_d,      spawn,    { .v = dmenucmd } },
-    {             MODKEY,      XK_e,      spawn,    { .v = filescmd } },
-    {             MODKEY, XK_Return,      spawn,     { .v = termcmd } },
-    {             MODKEY,      XK_b,  togglebar,                { 0 } },
-    {             MODKEY,      XK_c,  toggleags,                { 0 } },
-    {             MODKEY,      XK_j, focusstack,          { .i = +1 } },
-    {             MODKEY,      XK_k, focusstack,          { .i = -1 } },
-    {             MODKEY,      XK_i, incnmaster,          { .i = +1 } },
-    {             MODKEY,      XK_o, incnmaster,          { .i = -1 } },
-    { MODKEY | ShiftMask,      XK_j,   setmfact,       { .f = -0.05 } },
-    { MODKEY | ShiftMask,      XK_k,   setmfact,       { .f = +0.05 } },
-    { MODKEY | ShiftMask, XK_Return,       zoom,                { 0 } },
-    {             MODKEY,    XK_Tab,       view,                { 0 } },
-    { MODKEY | ShiftMask,      XK_q, killclient,                { 0 } },
-    {             MODKEY,      XK_t,  setlayout, { .v = &layouts[0] } },
-    {             MODKEY,      XK_f,  setlayout, { .v = &layouts[1] } },
-    {             MODKEY,      XK_m,  setlayout, { .v = &layouts[2] } },
-    {             MODKEY,      XK_s,  setlayout, { .v = &layouts[3] } },
-    {             MODKEY,      XK_g,  setlayout, { .v = &layouts[4] } },
-    {             MODKEY,      XK_l,      spawn,     { .v = lockcmd } },
-    { MODKEY | ShiftMask,      XK_l,  setlayout,                { 0 } },
-    {             MODKEY,      XK_0,       view,         { .ui = ~0 } },
-    { MODKEY | ShiftMask,      XK_0,        tag,         { .ui = ~0 } },
-    {             MODKEY,  XK_comma,   focusmon,          { .i = -1 } },
-    {             MODKEY, XK_period,   focusmon,          { .i = +1 } },
-    { MODKEY | ShiftMask,  XK_comma,     tagmon,          { .i = -1 } },
-    { MODKEY | ShiftMask, XK_period,     tagmon,          { .i = +1 } },
-    { MODKEY | ShiftMask,      XK_e,       quit,                { 0 } },
+    {             MODKEY,                    XK_d,      spawn,    { .v = dmenucmd } },
+    {             MODKEY,                    XK_e,      spawn,    { .v = filescmd } },
+    {             MODKEY,               XK_Return,      spawn,     { .v = termcmd } },
+    {             MODKEY,                    XK_b,  togglebar,                { 0 } },
+    {             MODKEY,                    XK_c,  toggleags,                { 0 } },
+    {             MODKEY,                    XK_j, focusstack,          { .i = +1 } },
+    {             MODKEY,                    XK_k, focusstack,          { .i = -1 } },
+    {             MODKEY,                    XK_i, incnmaster,          { .i = +1 } },
+    {             MODKEY,                    XK_o, incnmaster,          { .i = -1 } },
+    { MODKEY | ShiftMask,                    XK_j,   setmfact,       { .f = -0.05 } },
+    { MODKEY | ShiftMask,                    XK_k,   setmfact,       { .f = +0.05 } },
+    { MODKEY | ShiftMask,               XK_Return,       zoom,                { 0 } },
+    {             MODKEY,                  XK_Tab,       view,                { 0 } },
+    { MODKEY | ShiftMask,                    XK_q, killclient,                { 0 } },
+    {             MODKEY,                    XK_t,  setlayout, { .v = &layouts[0] } },
+    {             MODKEY,                    XK_f,  setlayout, { .v = &layouts[1] } },
+    {             MODKEY,                    XK_m,  setlayout, { .v = &layouts[2] } },
+    {             MODKEY,                    XK_s,  setlayout, { .v = &layouts[3] } },
+    {             MODKEY,                    XK_g,  setlayout, { .v = &layouts[4] } },
+    {             MODKEY,                    XK_l,      spawn,     { .v = lockcmd } },
+    { MODKEY | ShiftMask,                    XK_l,  setlayout,                { 0 } },
+    {             MODKEY,                    XK_0,       view,         { .ui = ~0 } },
+    { MODKEY | ShiftMask,                    XK_0,        tag,         { .ui = ~0 } },
+    {             MODKEY,                XK_comma,   focusmon,          { .i = -1 } },
+    {             MODKEY,               XK_period,   focusmon,          { .i = +1 } },
+    { MODKEY | ShiftMask,                XK_comma,     tagmon,          { .i = -1 } },
+    { MODKEY | ShiftMask,               XK_period,     tagmon,          { .i = +1 } },
+    { MODKEY | ShiftMask,                    XK_e,       quit,                { 0 } },
+    {                  0, XF86XK_AudioRaiseVolume,      spawn,    { .v = volumeup } },
+    {                  0, XF86XK_AudioLowerVolume,      spawn,  { .v = volumedown } },
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
             TAGKEYS(XK_9, 8)
@@ -147,17 +151,11 @@ static const Button buttons[] = {
     {     ClkTagBar, MODKEY, Button3,      toggletag,                { 0 } },
 };
 
-// autostarttags
-static const char* browsercmd[] = { "firefox", NULL };
-static const char* telegram[] = { "bash", "-c",
-    "QT_QPA_PLATFORMTHEME=gtk3 telegram-desktop", NULL };
-
-/* last cmd must be NULL! */
-Autostarttag autostarttaglist[] = {
-    { .cmd = browsercmd, .tags = 1 << 1 },
-    {   .cmd = telegram, .tags = 1 << 3 },
-    {       .cmd = NULL,      .tags = 0 },
+static const Assigntag assigned_tags[] = {
+    { 1 << 1, "firefox" },
+    { 1 << 3, "TelegramDesktop" },
 };
+
 static const char* ipcsockpath = "/tmp/dwm.sock";
 static IPCCommand ipccommands[] = { IPCCOMMAND(view, 1, { ARG_TYPE_UINT }),
     IPCCOMMAND(toggleview, 1, { ARG_TYPE_UINT }),

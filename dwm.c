@@ -20,6 +20,7 @@
  *
  * To understand everything else, start reading main().
  */
+#include <X11/X.h>
 #include <errno.h>
 #include <locale.h>
 #include <signal.h>
@@ -164,9 +165,9 @@ typedef struct {
 } Rule;
 
 typedef struct {
-	const char **cmd;
 	unsigned int tags;
-} Autostarttag;
+    const char *window_class;
+} Assigntag;
 
 /* function declarations */
 static void applyrules(Client *c);
@@ -240,8 +241,6 @@ static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
 static void spawn(const Arg *arg);
 static void spawnbar();
-static void autostarttagsspawner(void);
-static void applyautostarttags(Client *c);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
@@ -308,9 +307,6 @@ static Display *dpy;
 static Drw *drw;
 static Monitor *mons, *selmon, *lastselmon;
 static Window root, wmcheckwin;
-static unsigned int autostarttags = 0;
-static int autostartcomplete = 0;
-static int autostartcmdscomplete = 0;
 
 #include "ipc.h"
 /* configuration, allows nested code to access above variables */
@@ -368,6 +364,9 @@ applyrules(Client *c)
 	if (ch.res_name)
 		XFree(ch.res_name);
 	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
+    for (i = 0; i < LENGTH(assigned_tags); i++)
+        if (wmclasscontains(c->win, assigned_tags[i].window_class, ""))
+            c->tags = assigned_tags[i].tags;
 }
 
 int
@@ -1172,11 +1171,7 @@ manage(Window w, XWindowAttributes *wa)
 		c->tags = t->tags;
 	} else {
 		c->mon = selmon;
-		if (autostarttags) {
-			applyautostarttags(c);
-		} else {
-			applyrules(c);
-		}
+        applyrules(c);
 	}
 
 	if (c->x + WIDTH(c) > c->mon->wx + c->mon->ww)
@@ -1592,6 +1587,14 @@ restack(Monitor *m)
 				wc.sibling = c->win;
 			}
 		}
+        wc.stack_mode = Below;
+        wc.sibling = m->agswin;
+		for (c = m->stack; c; c = c->snext) {
+			if (!c->isfloating && ISVISIBLE(c)) {
+				XConfigureWindow(dpy, c->win, CWSibling|CWStackMode, &wc);
+				wc.sibling = c->win;
+			}
+		}
 	}
 	XSync(dpy, False);
 	while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
@@ -1605,8 +1608,6 @@ run(void)
 	struct epoll_event events[MAX_EVENTS];
 	XSync(dpy, False);
 	while (running) {
-		if (!(autostartcomplete || autostarttags))
-			autostarttagsspawner();
 		event_count = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);
 
 		for (int i = 0; i < event_count; i++) {
@@ -1983,33 +1984,6 @@ tag(const Arg *arg)
 		focus(NULL);
 		arrange(selmon);
 	}
-}
-
-void
-autostarttagsspawner(void)
-{
-	int i;
-	Arg arg;
-
-	for (i = autostartcmdscomplete; i < LENGTH(autostarttaglist) ; i++){
-		autostartcmdscomplete += 1;
-		autostarttags = autostarttaglist[i].tags;
-		arg.v = autostarttaglist[i].cmd ;
-		spawn(&arg);
-		return;
-	}
-	autostartcomplete = 1;
-	return;
-}
-
-void
-applyautostarttags(Client *c)
-{
-	if (!c)
-		return;
-	c->tags = autostarttags;
-	autostarttags = 0;
-	return;
 }
 
 void
