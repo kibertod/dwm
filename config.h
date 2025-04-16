@@ -152,7 +152,7 @@ static const Button buttons[] = {
 };
 
 static const Assigntag assigned_tags[] = {
-    { 1 << 1, "firefox" },
+    { 1 << 1,         "firefox" },
     { 1 << 3, "TelegramDesktop" },
 };
 
