@@ -31,7 +31,6 @@ static const char* tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
     /*{class, instance, title, tags_mask, isfloating, monitor}*/
-    {            "Firefox", NULL,    NULL, 1 << 8,   0,         -1 },
     {           "Nitrogen", NULL,    NULL,      0,   1,         -1 },
     {          "Minecraft", NULL,    NULL,      0,   1,         -1 },
     {        "File-roller", NULL,    NULL,      0,   1,         -1 },
