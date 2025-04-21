@@ -30,16 +30,16 @@ static const char* colors[][3] = {
 static const char* tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
-    /* class                                       instance title tags mask isfloating monitor */
-    {                                   "Firefox", NULL,    NULL, 1 << 8,   0,         -1 },
-    {                                  "Nitrogen", NULL,    NULL,      0,   1,         -1 },
-    {                                 "Minecraft", NULL,    NULL,      0,   1,         -1 },
-    {                               "File-roller", NULL,    NULL,      0,   1,         -1 },
-    {                               "pavucontrol", NULL,    NULL,      0,   1,         -1 },
-    {                               "pwvucontrol", NULL,    NULL,      0,   1,         -1 },
-    {                          "gnome-calculator", NULL,    NULL,      0,   1,         -1 },
-    {                        "org.gnome.Nautilus", NULL,    NULL,      0,   1,         -1 },
-    {                           "amplitube 5.exe", NULL,    NULL,      0,   1,         -1 },
+    /*{class, instance, title, tags_mask, isfloating, monitor}*/
+    {            "Firefox", NULL,    NULL, 1 << 8,   0,         -1 },
+    {           "Nitrogen", NULL,    NULL,      0,   1,         -1 },
+    {          "Minecraft", NULL,    NULL,      0,   1,         -1 },
+    {        "File-roller", NULL,    NULL,      0,   1,         -1 },
+    {        "pavucontrol", NULL,    NULL,      0,   1,         -1 },
+    {        "pwvucontrol", NULL,    NULL,      0,   1,         -1 },
+    {   "gnome-calculator", NULL,    NULL,      0,   1,         -1 },
+    { "org.gnome.Nautilus", NULL,    NULL,      0,   1,         -1 },
+    {    "amplitube 5.exe", NULL,    NULL,      0,   1,         -1 },
 };
 
 /* layout(s) */
