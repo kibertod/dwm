@@ -68,25 +68,23 @@ static const Layout layouts[] = {
     { MODKEY | ControlMask | ShiftMask, KEY, toggletag, \
     { .ui = 1 << TAG } },
 
-#define SHCMD(cmd) \
-    { \
-        .v = (const char*[]) { "/bin/sh", "-c", cmd, NULL } \
-    }
+#define SHCMD(cmd) { .v = (const char*[]) { "/bin/sh", "-c", cmd, NULL } }
+#define BASHCMDARR(cmd) { "bash", "-c", cmd, NULL }
 
 /* commands */
 static char dmenumon[2] = "0";
 static const char* dmenucmd    [] = { "rofi", "-show", "drun" };
 static const char* termcmd     [] = { "kitty", NULL };
 static const char* filescmd    [] = { "pcmanfm", NULL };
-static const char* lockcmd     [] = { "bash", "-c", "XSECURELOCK_DISCARD_FIRST_KEYPRESS=0 XSECURELOCK_COMPOSITE_OBSCURER=0 xsecurelock" };
 static const char* volumeup    [] = { "/home/kibertod/.dwm/volumeUp.sh", NULL };
 static const char* volumedown  [] = { "/home/kibertod/.dwm/volumeDown.sh", NULL };
-static const char* shot_full   [] = { "sh", "-c", "maim \"$HOME/Pictures/Screenshots/$(date)\"", NULL };
-static const char* shot_window [] = { "sh", "-c", "maim --window $(xdotool getactivewindow) \"$HOME/Pictures/Screenshots/$(date)\"", NULL };
-static const char* shot_select [] = { "sh", "-c", "maim --select \"$HOME/Pictures/$(date)\"", NULL };
-static const char* clip_full   [] = { "sh", "-c", "maim | xclip -selection clipboard -t image/png", NULL };
-static const char* clip_window [] = { "sh", "-c", "maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png", NULL };
-static const char* clip_select [] = { "sh", "-c", "maim --select | xclip -selection clipboard -t image/png", NULL };
+static const char* lockcmd     [] = BASHCMDARR("XSECURELOCK_DISCARD_FIRST_KEYPRESS=0 XSECURELOCK_COMPOSITE_OBSCURER=0 xsecurelock");
+static const char* shot_full   [] = BASHCMDARR("maim \"$HOME/Pictures/Screenshots/$(date)\"");
+static const char* shot_window [] = BASHCMDARR("maim --window $(xdotool getactivewindow) \"$HOME/Pictures/Screenshots/$(date)\"");
+static const char* shot_select [] = BASHCMDARR("maim --select \"$HOME/Pictures/$(date)\"");
+static const char* clip_full   [] = BASHCMDARR("maim | xclip -selection clipboard -t image/png");
+static const char* clip_window [] = BASHCMDARR("maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png");
+static const char* clip_select [] = BASHCMDARR("maim --select | xclip -selection clipboard -t image/png");
 
 static const Key keys[] = {
     /* modifier                     key        function        argument */
