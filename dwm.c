@@ -962,8 +962,7 @@ void toggleags(const Arg* arg) {
     Monitor* m = recttomon(0, 0, 1, 1);
     if (!m->agswin) {
         m->agsshown = 1;
-        pid_t pid = fork();
-        if (pid == 0) {
+        if (fork() == 0) {
             if (dpy)
                 close(ConnectionNumber(dpy));
             setsid();
