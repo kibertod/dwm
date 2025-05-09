@@ -29,16 +29,18 @@ static const char* colors[][3] = {
 
 static const char* tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
+#define FLOATINGRULE(class) { class, NULL, NULL, 0, 1, -1 }
 static const Rule rules[] = {
     /*{class, instance, title, tags_mask, isfloating, monitor}*/
-    {           "Nitrogen", NULL,    NULL,      0,   1,         -1 },
-    {          "Minecraft", NULL,    NULL,      0,   1,         -1 },
-    {        "File-roller", NULL,    NULL,      0,   1,         -1 },
-    {        "pavucontrol", NULL,    NULL,      0,   1,         -1 },
-    {        "pwvucontrol", NULL,    NULL,      0,   1,         -1 },
-    {   "gnome-calculator", NULL,    NULL,      0,   1,         -1 },
-    { "org.gnome.Nautilus", NULL,    NULL,      0,   1,         -1 },
-    {    "amplitube 5.exe", NULL,    NULL,      0,   1,         -1 },
+    FLOATINGRULE("Nitrogen"),
+    FLOATINGRULE("pwvucontrol"),
+    FLOATINGRULE("gnome-calculator"),
+    FLOATINGRULE("io.github.celluloid_player.Celluloid"),
+    FLOATINGRULE("Cpupower-gui"),
+    FLOATINGRULE("Blueberry.py"),
+    FLOATINGRULE("Nm-connection-editor"),
+    FLOATINGRULE("Viewnior"),
+    FLOATINGRULE("Qalculate-gtk"),
 };
 
 /* layout(s) */
@@ -77,7 +79,9 @@ static const char* termcmd     [] = { "kitty", NULL };
 static const char* filescmd    [] = { "pcmanfm", NULL };
 static const char* volumeup    [] = { "/home/kibertod/.dwm/volumeUp.sh", NULL };
 static const char* volumedown  [] = { "/home/kibertod/.dwm/volumeDown.sh", NULL };
-static const char* lockcmd     [] = BASHCMDARR("XSECURELOCK_DISCARD_FIRST_KEYPRESS=0 XSECURELOCK_COMPOSITE_OBSCURER=0 xsecurelock");
+static const char* brghtup     [] = { "/home/kibertod/.dwm/brightnessUp.sh", NULL };
+static const char* brghtdown   [] = { "/home/kibertod/.dwm/brightnessDown.sh", NULL };
+static const char* lockcmd     [] = BASHCMDARR("XSECURELOCK_DISCARD_FIRST_KEYPRESS=0 XSECURELOCK_COMPOSITE_OBSCURER=0 XSECURELOCK_PAM_SERVICE=xsecurelock xsecurelock");
 static const char* shot_full   [] = BASHCMDARR("maim \"$HOME/Pictures/Screenshots/$(date)\"");
 static const char* shot_window [] = BASHCMDARR("maim --window $(xdotool getactivewindow) \"$HOME/Pictures/Screenshots/$(date)\"");
 static const char* shot_select [] = BASHCMDARR("maim --select \"$HOME/Pictures/$(date)\"");
@@ -119,6 +123,8 @@ static const Key keys[] = {
     // media keys
     {                       0, XF86XK_AudioRaiseVolume,      spawn,    { .v = volumeup } },
     {                       0, XF86XK_AudioLowerVolume,      spawn,  { .v = volumedown } },
+    {                       0,  XF86XK_MonBrightnessUp,      spawn,     { .v = brghtup } },
+    {                       0,XF86XK_MonBrightnessDown,      spawn,   { .v = brghtdown } },
     // screenshots
     {                       0,                XK_Print,      spawn,   { .v = shot_full } },
     {                  MODKEY,                XK_Print,      spawn, { .v = shot_window } },
