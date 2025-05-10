@@ -1,3 +1,8 @@
 dwm
 dwm.o
 .cache
+dwm-msg
+dwm-msg.o
+drw.o
+util.o
+util
