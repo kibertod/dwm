@@ -115,7 +115,6 @@ JavaScriptQuotes: Leave
 JavaScriptWrapImports: true
 KeepEmptyLinesAtTheStartOfBlocks: true
 LambdaBodyIndentation: Signature
-Language: C
 LineEnding: DeriveLF
 MacroBlockBegin: ""
 MacroBlockEnd: ""
