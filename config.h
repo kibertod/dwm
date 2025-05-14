@@ -53,11 +53,13 @@ static const int lockfullscreen = 1;
 #include "layouts.c"
 static const Layout layouts[] = {
     /* symbol     arrange function */
-    {  "[]=",    tile },
-    {  "><>",    NULL },
+    {  "[]=", tile },
+    {  "><>", NULL },
     {  "[M]", monocle },
     { "[\\]", dwindle },
-    {   "HH",    grid },
+    {   "HH", grid },
+    {  "|M|", centeredmaster },
+	{  ">M>", centeredfloatingmaster },
 };
 
 /* key definitions */
@@ -81,6 +83,7 @@ static const char* volumeup    [] = { "/home/kibertod/.dwm/volumeUp.sh", NULL };
 static const char* volumedown  [] = { "/home/kibertod/.dwm/volumeDown.sh", NULL };
 static const char* brghtup     [] = { "/home/kibertod/.dwm/brightnessUp.sh", NULL };
 static const char* brghtdown   [] = { "/home/kibertod/.dwm/brightnessDown.sh", NULL };
+static const char* togglepicom [] = { "/home/kibertod/.dwm/togglePicom.bash", NULL };
 static const char* lockcmd     [] = BASHCMDARR("XSECURELOCK_DISCARD_FIRST_KEYPRESS=0 XSECURELOCK_COMPOSITE_OBSCURER=0 XSECURELOCK_PAM_SERVICE=xsecurelock xsecurelock");
 static const char* shot_full   [] = BASHCMDARR("maim \"$HOME/Pictures/Screenshots/$(date)\"");
 static const char* shot_window [] = BASHCMDARR("maim --window $(xdotool getactivewindow) \"$HOME/Pictures/Screenshots/$(date)\"");
@@ -107,6 +110,8 @@ static const Key keys[] = {
     {                  MODKEY,                    XK_m,  setlayout, { .v = &layouts[2] } },
     {                  MODKEY,                    XK_s,  setlayout, { .v = &layouts[3] } },
     {                  MODKEY,                    XK_g,  setlayout, { .v = &layouts[4] } },
+    {                  MODKEY,                    XK_s,  setlayout, { .v = &layouts[5] } },
+    {      MODKEY | ShiftMask,                    XK_s,  setlayout, { .v = &layouts[6] } },
     {      MODKEY | ShiftMask,                    XK_l,  setlayout,                { 0 } },
     {                  MODKEY,                    XK_0,       view,         { .ui = ~0 } },
     {      MODKEY | ShiftMask,                    XK_0,        tag,         { .ui = ~0 } },
@@ -115,6 +120,7 @@ static const Key keys[] = {
     {      MODKEY | ShiftMask,                XK_comma,     tagmon,          { .i = -1 } },
     {      MODKEY | ShiftMask,               XK_period,     tagmon,          { .i = +1 } },
     {      MODKEY | ShiftMask,                    XK_e,       quit,                { 0 } },
+    {                  MODKEY,                   XK_F1,      spawn, { .v = togglepicom } },
     // quick launch
     {                  MODKEY,                    XK_d,      spawn,    { .v = dmenucmd } },
     {                  MODKEY,                    XK_e,      spawn,    { .v = filescmd } },

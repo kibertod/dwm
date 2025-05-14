@@ -19,22 +19,11 @@
 #define TEXTW(X)     (drw_fontset_getwidth(drw, (X)) + lrpad)
 
 /* enums */
-enum
-{
-    CurNormal,
-    CurResize,
-    CurMove,
-    CurLast
-}; /* cursor */
+enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 
-enum
-{
-    SchemeNorm,
-    SchemeSel
-}; /* color schemes */
+enum { SchemeNorm, SchemeSel }; /* color schemes */
 
-enum
-{
+enum {
     NetSupported,
     NetWMName,
     NetWMState,
@@ -48,8 +37,7 @@ enum
     NetLast
 }; /* EWMH atoms */
 
-enum
-{
+enum {
     WMProtocols,
     WMDelete,
     WMState,
@@ -57,8 +45,7 @@ enum
     WMLast
 }; /* default atoms */
 
-enum
-{
+enum {
     ClkTagBar,
     ClkLtSymbol,
     ClkStatusText,
@@ -70,8 +57,7 @@ enum
 
 typedef struct TagState TagState;
 
-struct TagState
-{
+struct TagState {
     int selected;
     int occupied;
     int urgent;
@@ -79,21 +65,18 @@ struct TagState
 
 typedef struct ClientState ClientState;
 
-struct ClientState
-{
+struct ClientState {
     int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
 };
 
-typedef union
-{
+typedef union {
     long i;
     unsigned long ui;
     float f;
     const void* v;
 } Arg;
 
-typedef struct
-{
+typedef struct {
     unsigned int click;
     unsigned int mask;
     unsigned int button;
@@ -104,8 +87,7 @@ typedef struct
 typedef struct Monitor Monitor;
 typedef struct Client Client;
 
-struct Client
-{
+struct Client {
     char name[256];
     float mina, maxa;
     int x, y, w, h;
@@ -121,24 +103,21 @@ struct Client
     ClientState prevstate;
 };
 
-typedef struct
-{
+typedef struct {
     unsigned int mod;
     KeySym keysym;
     void (*func)(const Arg*);
     const Arg arg;
 } Key;
 
-typedef struct
-{
+typedef struct {
     const char* symbol;
     void (*arrange)(Monitor*);
 } Layout;
 
 typedef struct Pertag Pertag;
 
-struct Monitor
-{
+struct Monitor {
     char ltsymbol[16];
     char lastltsymbol[16];
     float mfact;
@@ -166,18 +145,16 @@ struct Monitor
     Pertag* pertag;
 };
 
-typedef struct
-{
+typedef struct {
     const char* class;
     const char* instance;
     const char* title;
-   unsigned int tags;
+    unsigned int tags;
     int isfloating;
     int monitor;
 } Rule;
 
-typedef struct
-{
+typedef struct {
     unsigned int tags;
     const char* window_class;
 } Assigntag;
@@ -256,7 +233,7 @@ void setupepoll(void);
 void seturgent(Client* c, int urg);
 void showhide(Client* c);
 void spawn(const Arg* arg);
-void spawnbar();
+void spawnbar(void);
 void tag(const Arg* arg);
 void tagmon(const Arg* arg);
 void tile(Monitor* m);
@@ -287,6 +264,8 @@ int xerror(Display* dpy, XErrorEvent* ee);
 int xerrordummy(Display* dpy, XErrorEvent* ee);
 int xerrorstart(Display* dpy, XErrorEvent* ee);
 void zoom(const Arg* arg);
+void centeredmaster(Monitor* m);
+void centeredfloatingmaster(Monitor* m);
 
 /* variables */
 static const char broken[] = "broken";
